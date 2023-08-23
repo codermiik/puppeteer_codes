@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jambo Shop - Nike Shoes</title>
+</head>
+<body>
+  <h1>Nike Shoes on JamboShop:</h1>
+  <ul>
+    <% shoes.forEach((shoe) => { %>
+      <li>
+        <strong>Name:</strong> <%= shoe.name %><br>
+        <strong>Price Before Offer:</strong> <%= shoe.price_before_offer %><br>
+        <strong>Price After Offer:</strong> <%= shoe.price_after_offer %><br>
+        <hr>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>
