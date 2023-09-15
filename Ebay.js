@@ -3,7 +3,7 @@ const fs = require('fs');
 const ObjectsToCsv = require('objects-to-csv');
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({headless:false});
   const page = await browser.newPage();
 
  // const searchQuery = 'Nike shoes'; // Change this to your desired search query
@@ -34,12 +34,4 @@ const ObjectsToCsv = require('objects-to-csv');
   console.log('Nike Shoes on eBay:');
   console.log(shoes);
 
-  /*// Convert the shoes data to a CSV format
-  const csv = new ObjectsToCsv(shoes);
-
-  // Save the CSV file to a specified path
-  const csvFilePath = 'ebay_nike_shoes.csv';
-  await csv.toDisk(csvFilePath, { allColumns: true });
-
-  console.log(`CSV file '${csvFilePath}' has been generated successfully.`);*/
 })();
