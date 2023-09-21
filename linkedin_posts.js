@@ -13,27 +13,6 @@ async function fetchConnectionInvitations() {
     page.click('.login__form_action_container button'),
   ]);
 
-  // Wait for the user's profile page to load
-  await page.waitForSelector('.global-nav__me-photo');
-
-  // Navigate to the My Network page
-  await page.goto('https://www.linkedin.com/mynetwork/invitation-manager/');
-
-  // Wait for the connection invitations to load
-  await page.waitForSelector('.mn-invitation-list');
-
-  // Extract connection invitation details
-  const invitationDetails = await page.evaluate(() => {
-    const invitationNodes = document.querySelectorAll('.mn-invitation-list li');
-    const invitations = [];
-    for (const node of invitationNodes) {
-      const sender = node.querySelector('.invitation-card__sender-name').innerText;
-      const message = node.querySelector('.invitation-card__message').innerText;
-      invitations.push({ sender, message });
-    }
-    return invitations;
-  });
-
   console.log('Connection Invitations:', invitationDetails);
 
   await browser.close();
@@ -51,3 +30,5 @@ setInterval(async () => {
     console.error('Error in scheduled execution:', error);
   }
 }, intervalInMilliseconds);
+
+

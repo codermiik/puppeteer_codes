@@ -1,37 +1,92 @@
-const puppeteer = require('puppeteer');
-const fs = require('fs');
-const ObjectsToCsv = require('objects-to-csv');
+'use strict';
 
-(async () => {
-  const browser = await puppeteer.launch({headless:false});
+const puppeteer = require('puppeteer');
+const mysql = require('mysql2/promise'); // Import the mysql2 library
+
+// Function to perform the scraping and insertion into the database
+const scrapeAndInsertData = async () => {
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
- // const searchQuery = 'Nike shoes'; // Change this to your desired search query
-  //const url = `https://www.ebay.com/=${encodeURIComponent(searchQuery)}`;
-  const url = `https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2380057.m570.l1313&_nkw=nike+shoes&_sacat=0`
+  // Define search queries for Nike, Adidas, Puma, and Reebok shoes
+  const queries = ['nike shoes', 'adidas shoes', 'puma shoes', 'reebok shoes'];
+  const results = {};
 
-  await page.goto(url);
+  // MySQL database configuration
+  const dbConfig = {
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'ebay_shoes',
+  };
 
-  const shoes = await page.evaluate(() => {
-    const items = document.querySelectorAll('.s-item');
-    const results = [];
+  const connection = await mysql.createConnection(dbConfig);
 
-    items.forEach((item) => {
-      const name = item.querySelector('.s-item__title')?.innerText.trim();
-      const price = item.querySelector('.s-item__price')?.innerText.trim();
-      const plus_shipping = item.querySelector('.s-item__shipping')?.innerText.trim();
+  for (const query of queries) {
+    const url = `https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2380057.m570.l1313&_nkw=${encodeURIComponent(query)}&_sacat=0`;
 
-      if (name && price && plus_shipping) {
-        results.push({ name, price, plus_shipping });
-      }
+    await page.goto(url);
+
+    const shoes = await page.evaluate(() => {
+      const items = document.querySelectorAll('.s-item');
+      const results = [];
+
+      items.forEach((item) => {
+        const name = item.querySelector('.s-item__title')?.innerText.trim();
+        const price = item.querySelector('.s-item__price')?.innerText.trim();
+        const shipping = item.querySelector('.s-item__shipping')?.innerText.trim();
+
+        if (name && price && shipping) {
+          results.push({ name, price, shipping });
+        }
+      });
+
+      return results;
     });
 
-    return results;
-  });
+    // Determine the table name based on the query
+    let tableName;
+    switch (query) {
+      case 'nike shoes':
+        tableName = 'nike';
+        break;
+      case 'adidas shoes':
+        tableName = 'adidas';
+        break;
+      case 'puma shoes':
+        tableName = 'puma';
+        break;
+      case 'reebok shoes':
+        tableName = 'reebok';
+        break;
+      default:
+        tableName = 'other'; // Default to a generic table name for unknown queries
+    }
+
+    // Check if each shoe already exists in the table
+    if (shoes.length > 0) {
+      for (const shoe of shoes) {
+        const [existingShoe] = await connection.query(`SELECT * FROM ${tableName} WHERE name = ?`, [shoe.name]);
+
+        // Insert the shoe only if it doesn't already exist in the table
+        if (existingShoe.length === 0) {
+          const insertQuery = `INSERT INTO ${tableName} (name, price, shipping) VALUES (?, ?, ?)`;
+          await connection.query(insertQuery, [shoe.name, shoe.price, shoe.shipping]);
+          console.log(`Inserted '${shoe.name}' into ${tableName} table.`);
+        }
+      }
+    }
+  }
 
   await browser.close();
+  await connection.end();
 
-  console.log('Nike Shoes on eBay:');
-  console.log(shoes);
+  console.log('Data scraping and insertion into MySQL completed.');
+};
 
-})();
+// Set an initial run of the scraper
+scrapeAndInsertData();
+
+// Schedule the scraper to run every 6 hours (in milliseconds)
+const interval = 6 * 60 * 60 * 1000; // 6 hours
+setInterval(scrapeAndInsertData, interval);
