@@ -5,6 +5,7 @@ puppeteer.use(StealthPlugin())
 const {executablePath}=require('puppeteer')
 
 
+
  const url='https://bot.sannysoft.com/'
 
  const main=async () => {

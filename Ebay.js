@@ -60,7 +60,7 @@ const scrapeAndInsertData = async () => {
         tableName = 'reebok';
         break;
       default:
-        tableName = 'other'; // Default to a generic table name for unknown queries
+        tableName = 'other';
     }
 
     // Check if each shoe already exists in the table
@@ -81,12 +81,12 @@ const scrapeAndInsertData = async () => {
   await browser.close();
   await connection.end();
 
-  console.log('Data scraping and insertion into MySQL completed.');
+  console.log('Data scraping and insertion into MySQL completed.Dzaaaaaaaam! william you is a genius');
 };
 
 // Set an initial run of the scraper
 scrapeAndInsertData();
 
-// Schedule the scraper to run every 6 hours (in milliseconds)
-const interval = 6 * 60 * 60 * 1000; // 6 hours
+// Schedule the scraper to run every 10 seconds (in milliseconds)
+const interval = 10 *1000; // 
 setInterval(scrapeAndInsertData, interval);

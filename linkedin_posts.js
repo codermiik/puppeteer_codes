@@ -5,7 +5,7 @@ async function fetchConnectionInvitations() {
   const page = await browser.newPage();
   await page.goto('https://www.linkedin.com/login');
 
-  await page.type('#username', 'williamsumba@gmailcom'); // Replace with your LinkedIn username
+  await page.type('#username', 'williamsumba2019@gmail.com'); // Replace with your LinkedIn username
   await page.type('#password', 'Sumba1462'); // Replace with your LinkedIn password
 
   await Promise.all([
