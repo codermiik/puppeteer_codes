@@ -9,13 +9,16 @@ const {executablePath}=require('puppeteer')
  const url='https://bot.sannysoft.com/'
 
  const main=async () => {
+ 
     const browser=await puppeteer.launch({headless: false, executablePath: executablePath()})
     const page=await browser.newPage()
     await page.goto(url)
-    await page.screenshot({path:'bot.jpg'})
-  
-    await browser.close()
+    const screenshotPath = `./${url.replace(/[:\/.]/g, '_')}.jpg`; 
+    await page.screenshot({path:screenshotPath})
+    console.log('bot successfully passed all tests') 
 
+    await browser.close()
+      
 }
 
-main()
+main();

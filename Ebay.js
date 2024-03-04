@@ -1,14 +1,14 @@
 'use strict';
 
 const puppeteer = require('puppeteer');
-const mysql = require('mysql2/promise'); // Import the mysql2 library
+const mysql = require('mysql2/promise');
 
-// Function to perform the scraping and insertion into the database
+
 const scrapeAndInsertData = async () => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
-  // Define search queries for Nike, Adidas, Puma, and Reebok shoes
+  
   const queries = ['nike shoes', 'adidas shoes', 'puma shoes', 'reebok shoes'];
   const results = {};
 
@@ -88,5 +88,5 @@ const scrapeAndInsertData = async () => {
 scrapeAndInsertData();
 
 // Schedule the scraper to run every 10 seconds (in milliseconds)
-const interval = 10 *1000; // 
+const interval = 10 * 60 * 60 * 1000; // 
 setInterval(scrapeAndInsertData, interval);
