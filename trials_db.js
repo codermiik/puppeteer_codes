@@ -16,7 +16,7 @@ async function scrapeQuotes() {
     const connection = await mysql.createConnection(dbConfig);
 
     try {
-        await page.goto('https://quotes.toscrape.com/', { waitUntil: "domcontentloaded" });
+        await page.goto('https://quotes.toscrape.com/', { waitUntil: "domcontentloaded", waitUntil:"networkidle0"});
 
         let hasNextPage = true;
         const quotesData = [];
@@ -86,5 +86,5 @@ async function scrollPage(page) {
     });
 }
 
-// Call the function and log the result
+
 scrapeQuotes()
