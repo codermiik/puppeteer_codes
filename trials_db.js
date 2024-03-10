@@ -64,7 +64,7 @@ async function scrapeQuotes() {
         console.error('Error occurred:', error);
     } finally {
         await browser.close();
-        await connection.end(); // Close the database connection
+        await connection.end(); 
     }
 }
 
