@@ -17,7 +17,7 @@ async function scrapeQuotes() {
         const quotesData = [];
 
         while (hasNextPage) {
-            await scrollPage(page);
+            await scrollPage(page); 
 
             const data = await page.evaluate(() => {
                 const items = document.querySelectorAll('.quote');
