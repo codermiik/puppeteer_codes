@@ -8,8 +8,8 @@ async function main() {
   
   await page.goto('https://github.com/login');
 
-  await page.type('#login_field', 'codermiik');
-  await page.type('#password', 'Sumba1462');
+  await page.type('#login_field', '#####');
+  await page.type('#password', '###');
 
   await Promise.all([
     page.waitForNavigation(),

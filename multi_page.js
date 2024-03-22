@@ -1,5 +1,6 @@
 'use strict';
 
+ //this code generates a site based on the data scrapped
 const express = require('express');
 const puppeteer = require('puppeteer');
 const app = express();
@@ -7,17 +8,17 @@ const port = 3000;
 app.set('view engine', 'ejs');
 
 async function scrapeQuotes() {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: false , waitUntil:"networkidle2" });
     const page = await browser.newPage();
 
     try {
-        await page.goto('https://quotes.toscrape.com/', { waitUntil: "domcontentloaded", waitUntil:"networkidle0" });
+        await page.goto('https://quotes.toscrape.com/', { waitUntil: "domcontentloaded"});
 
         let hasNextPage = true;
         const quotesData = [];
 
         while (hasNextPage) {
-            await scrollPage(page); 
+            await scrollPage(page); //this function has been defined elsewhere in this code
 
             const data = await page.evaluate(() => {
                 const items = document.querySelectorAll('.quote');
@@ -57,6 +58,7 @@ async function scrapeQuotes() {
     }
 }
 
+//the scroll page function
 async function scrollPage(page) {
     await page.evaluate(async () => {
         await new Promise((resolve, reject) => {
