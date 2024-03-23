@@ -1,6 +1,6 @@
 'use strict';
 
- //this code generates a site based on the data scrapped
+ //This code generates a site based on the data scrapped
 const express = require('express');
 const puppeteer = require('puppeteer');
 const app = express();
@@ -18,7 +18,7 @@ async function scrapeQuotes() {
         const quotesData = [];
 
         while (hasNextPage) {
-            await scrollPage(page); //this function has been defined elsewhere in this code
+            await scrollPage(page); //This function has been defined elsewhere in this code
 
             const data = await page.evaluate(() => {
                 const items = document.querySelectorAll('.quote');
