@@ -30,6 +30,6 @@ const puppeteer = require('puppeteer');
     console.error(`Error: ${err.message}`);
   } finally {
     await browser.close();
-    console.log(`Screenshots have been captured successfully`);
+  
   }
 })();
