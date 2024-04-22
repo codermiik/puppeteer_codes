@@ -92,8 +92,8 @@ app.get('/', async (req, res) => {
         const jobs = await scrapeJobs();
         res.render('jobs', { jobs });
     } catch (error) {
-        console.error('Error occurred:', error);
-        res.send('An error occurred while scraping data.');
+        console.error(`Error:${error.message}`);
+        res.send('An error occurred while extracting jobs.');
     }
 });
 
