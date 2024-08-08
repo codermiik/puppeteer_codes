@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scraped Job Listings</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .category {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+    .job-table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .job-table th, .job-table td {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    .job-table th {
+      background-color: #007bff;
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .job-table td {
+      color: #333;
+    }
+    .job-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .job-table tr:hover {
+      background-color: #e2e6ea;
+    }
+  </style>
+</head>
+<body>
+  <% Object.keys(jobs).forEach(category => { %>
+    <div class="category"><%= category %></div>
+    <table class="job-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% jobs[category].forEach(job => { %>
+          <tr>
+            <td class="title"><%= job.title %></td>
+            <td class="description"><%= job.description %></td>
+            <td class="url"><a href="<%= job.url %>">Link</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% }) %>
+</body>
+</html>
