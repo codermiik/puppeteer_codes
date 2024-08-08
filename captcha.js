@@ -1,4 +1,4 @@
-const puppeteerExtra = require('puppeteer-extra');
+/*const puppeteerExtra = require('puppeteer-extra');
 const Stealth = require('puppeteer-extra-plugin-stealth');
 
 
@@ -26,4 +26,4 @@ puppeteerExtra.use(Stealth());
 
 
   await browserObj.close();
-})();
+})();*/

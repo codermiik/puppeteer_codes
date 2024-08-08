@@ -18,6 +18,7 @@ const puppeteer = require('puppeteer');
     });
   const url = 'https://www.jumia.co.ke/';
   await page.goto(url);
+ // await page.waitForTimeout(10000); in a case where no resouce blocking is needed..just add a delay to ensure all resources are loaded
   const screenshotPath = `./${url.replace(/[:\/.]/g, '_')}.jpg`
   await page.screenshot({ path: screenshotPath, fullPage: true });
   }catch(err){
