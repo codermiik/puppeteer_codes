@@ -1,54 +1,69 @@
 'use strict';
 
-/*
-const puppeteer = require('puppeteer');
+//SCRAPING JUMIA AND GENERATING A JSON FILE
 
-(async()=>{
-  const browser = await puppeteer.launch({headless: false })
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
+
+(async () => {
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
-   const searchTerm = "television";
-   const url = `https://www.jumia.co.ke/catalog/?q=${encodeURIComponent(searchTerm)}`;
+  const searchTerm = "television";
+  const url = `https://www.jumia.co.ke/catalog/?q=${encodeURIComponent(searchTerm)}`;
 
-   try{
+  try {
+
+    //This section blocks the images from loading so as to reduce execution time of this scrapper
+
+    await page.setRequestInterception(true);
+    page.on('request', request => {
+    const resourceType = request.resourceType();
+     if (resourceType === 'image' || resourceType === 'webscocket' ) {
+       request.abort();
+     } else {
+       request.continue();
+     }
+     });
+
+
     await page.goto(url, { waitUntil: 'networkidle2' });
-    await page.waitForSelector('.prd._fb', { timeout: 60000 });
+    await page.waitForSelector('article.prd._fb', { timeout: 60000 });
 
-      const data =  await page. evaluate(()=>{
-      const tvs=document.querySelectorAll('.prd._fb')
-      const results=[]
+    const data = await page.evaluate(() => {
+      const tvs = document.querySelectorAll('article.prd._fb');
+      const results = [];
 
-          tvs.forEach((tv)=>{
-            const name=  tv.querySelector('.name')?.innerText.trim()
-            const initial_price=  tv.querySelector('.old')?.innerText.trim()
-            const current_price=  tv.querySelector('.prc')?.innerText.trim()
-            const percentage_discount=  tv.querySelector('.bdg._dsct')?.innerText.trim()
+      tvs.forEach((tv) => {
+        const name = tv.querySelector('.name')?.innerText.trim();
+        const initial_price = tv.querySelector('.old')?.innerText.trim();
+        const current_price = tv.querySelector('.prc')?.innerText.trim();
+        const percentage_discount = tv.querySelector('.bdg._dsct')?.innerText.trim();
 
-            if(name && initial_price && current_price && percentage_discount) {
-              results.push({name ,initial_price,current_price,percentage_discount}) ;
-            }
-          })
-         return results;
+        if (name && initial_price && current_price && percentage_discount) {
+          results.push({ name, initial_price, current_price, percentage_discount });
+        }
+      });
 
-    })
-    console.log(data)
-    
-   }catch(err){
-    console.error(`Error: ${err.message}`) ;
-   }finally{
-    await browser.close()
-   }
+      return results;
+    });
 
-})()  */
+    // writting the data to the json file
+    const filePath = path.join(__dirname, 'jumia_televisions.json');
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    console.log(`Data has been saved to ${filePath}`);
 
 
+  } catch (err) {
+    console.error(`Error: ${err.message}`);
+  } finally {
+    await browser.close();
+  }
+})();
 
 //SAME CODE BUT DATA IS STORED IN A CSV FILE
-
-
 /*
-
-
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
@@ -107,60 +122,5 @@ const path = require('path');
 
 */
 
-
-
-//SAME CODE BUT DATA IS STORED IN A JSON FILE
-
-'use strict';
-
-const puppeteer = require('puppeteer');
-const fs = require('fs');
-const path = require('path');
-
-(async () => {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
-
-  const searchTerm = "television";
-  const url = `https://www.jumia.co.ke/catalog/?q=${encodeURIComponent(searchTerm)}`;
-
-  try {
-    await page.goto(url, { waitUntil: 'networkidle2' });
-
-    // Wait for the elements that indicate the page is loaded
-    await page.waitForSelector('article.prd._fb', { timeout: 60000 });
-
-    const data = await page.evaluate(() => {
-      const tvs = document.querySelectorAll('article.prd._fb');
-      const results = [];
-
-      tvs.forEach((tv) => {
-        const name = tv.querySelector('.name')?.innerText.trim();
-        const initial_price = tv.querySelector('.old')?.innerText.trim();
-        const current_price = tv.querySelector('.prc')?.innerText.trim();
-        const percentage_discount = tv.querySelector('.bdg._dsct')?.innerText.trim();
-
-        if (name && initial_price && current_price && percentage_discount) {
-          results.push({ name, initial_price, current_price, percentage_discount });
-        }
-      });
-
-      return results;
-    });
-
-    // Define the path for the JSON file
-    const filePath = path.join(__dirname, 'jumia_televisions.json');
-
-    // Write JSON file
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-
-    console.log(`Data has been saved to ${filePath}`);
-
-  } catch (err) {
-    console.error(`Error: ${err.message}`);
-  } finally {
-    await browser.close();
-  }
-})();
 
 
