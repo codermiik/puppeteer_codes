@@ -3,12 +3,12 @@
  //This code generates a site based on the data scrapped
 const express = require('express');
 const puppeteer = require('puppeteer');
-const app = express();
+const app = express();  
 const port = 3000;
 app.set('view engine', 'ejs');
 
 async function scrapeQuotes() {
-    const browser = await puppeteer.launch({ headless: false , waitUntil:"networkidle2" });
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     try {
@@ -22,17 +22,17 @@ async function scrapeQuotes() {
 
             const data = await page.evaluate(() => {
                 const items = document.querySelectorAll('.quote');
-                const data = [];
+                const results= [];
 
                 items.forEach((item) => {
                     const quote = item.querySelector('.text')?.innerText.trim();
                     const author = item.querySelector('.author')?.innerText.trim();
                     if (quote && author) {
-                        data.push({ quote, author });
+                        results.push({ quote, author });
                     }
                 });
 
-                return data;
+                return results;
             });
 
             quotesData.push(...data);

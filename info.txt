@@ -1,2 +1,0 @@
-There are files where some code has been commented out. you are only required to uncomment the sections
-of code that align with your requirements. i.e the jumia file has code that generates both a json file and csv file.
